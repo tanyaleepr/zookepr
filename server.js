@@ -6,6 +6,7 @@ const { animals } = require('./data/animals');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+app.use(express.static('zookeepr-public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -45,7 +46,7 @@ function createNewAnimal(body, animalsArray) {
   const animal = body;
   animalsArray.push(animal);
   fs.writeFileSync(
-    path.join(__dirname, './data/animals.json'),
+    path.join(__dirname, './zookeepr/data/animals'),
     JSON.stringify({ animals: animalsArray }, null, 2)
   );
   return animal;
@@ -95,6 +96,23 @@ app.post('/api/animals', (req, res) => {
     res.json(animal);
   }
 });
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './zookeepr-public/index.html'));
+});
+
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, './zookeepr-public/animals.html'));
+});
+
+app.get('/zookeepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './zookeepr-public/zookeepers.html'));
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './zookeepr-public/index.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`API server now on port ${PORT}!`);
 });
