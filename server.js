@@ -2,13 +2,17 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const { animals } = require('./data/animals');
+const  apiRoutes = require('./routes/apiRoutes')
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-app.use(express.static('zookepr-public'));
+app.use(express.static('zookeepr-public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+
+app.use('/api', apiRoutes)
 
 function filterByQuery(query, animalsArray) {
   let personalityTraitsArray = [];
